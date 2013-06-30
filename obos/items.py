@@ -5,7 +5,14 @@
 
 from scrapy.item import Item, Field
 
-class ObosItem(Item):
-    # define the fields for your item here like:
-    # name = Field()
-    pass
+class Property(Item):
+    location = Field()
+    rooms = Field()
+    area = Field()
+    property_type = Field()
+    price = Field()
+    debt = Field()
+    total_price = Field()
+    deadline = Field()
+    current_seniority = Field()
+
