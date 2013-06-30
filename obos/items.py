@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 
-class Property(Item):
+class ObosItem(Item):
     location = Field()
     rooms = Field()
     area = Field()
@@ -15,4 +15,3 @@ class Property(Item):
     total_price = Field()
     deadline = Field()
     current_seniority = Field()
-
