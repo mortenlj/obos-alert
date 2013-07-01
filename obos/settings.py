@@ -12,4 +12,4 @@ SPIDER_MODULES = ['obos.spiders']
 NEWSPIDER_MODULE = 'obos.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'obos (+http://www.yourdomain.com)'
+USER_AGENT = 'Obos Alert (+https://bitbucket.org/mortenlj/obos-alert)'
