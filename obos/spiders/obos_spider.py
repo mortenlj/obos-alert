@@ -1,23 +1,10 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from obos.items import ObosItem
-
-# [u'Adresse:']
-# [u'Bygg\xe5r:']
-# [u'Areal:']
-# [u'Boligtype:']
-# [u'Diverse:']
-# [u'Prisantydning:']
-# [u'Fellesgjeld:']
-# [u'Totalpris:']
-# [u'Felleskost:']
-# [u'Forkj\xf8psrett:']
-# [u'Meldefrist:']
-# [u'Ansiennitet pt:']
+from obos.items import ObosItem, ObosLoader
 
 
-class ObosSpiderSpider(CrawlSpider):
+class ObosSpider(CrawlSpider):
     name = 'obos'
     allowed_domains = ['obos.no']
     start_urls = ['http://www.obos.no/boliger-med-forkjopsrett']
@@ -32,27 +19,20 @@ class ObosSpiderSpider(CrawlSpider):
         u'Areal:': "area",
         u'Boligtype:': "property_type",
         u'Prisantydning:': "price",
+        u'Fastpris:': "price",
         u'Fellesgjeld:': "debt",
         u'Totalpris:': "total_price",
         u'Meldefrist:': "deadline",
         u'Ansiennitet pt:': "current_seniority"
     }
 
-    def __init__(self, *a, **kw):
-        super(ObosSpiderSpider, self).__init__(*a, **kw)
-
     def parse_item(self, response):
         hxs = HtmlXPathSelector(response)
-        i = ObosItem()
         panels = hxs.select("//div[@id=\"ctl00_body_PanelDetails\"]")
-        bullets = panels.select("dl")
-        for bullet in bullets:
-            self.parse_bullet(bullet, i)
-        return i
+        loader = ObosLoader(selector=panels, response=response)
+        for bullet, field_name in self._BULLET_MAPPING.iteritems():
+            loader.add_xpath(field_name, self._build_bullet_path(bullet))
+        return loader.load_item()
 
-    def parse_bullet(self, bullet, i):
-        name = bullet.select("dt/text()").extract()[0]
-        value = bullet.select("dd/text()").extract()[0]
-        field = self._BULLET_MAPPING.get(name, None)
-        if field:
-            i[field] = value
+    def _build_bullet_path(self, bullet):
+        return u"dl/dt[text()='%s']/../dd/text()" % bullet
