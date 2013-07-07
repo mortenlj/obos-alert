@@ -15,9 +15,8 @@ class ObosSpider(CrawlSpider):
     )
 
     _BULLET_MAPPING = {
-        u'Adresse:': "location",
-        u'Areal:': "area",
-        u'Boligtype:': "property_type",
+        u'Adresse:': "address",
+        u'Areal:': "size",
         u'Prisantydning:': "price",
         u'Fastpris:': "price",
         u'Fellesgjeld:': "debt",
@@ -32,6 +31,9 @@ class ObosSpider(CrawlSpider):
         loader = ObosLoader(selector=panels, response=response)
         for bullet, field_name in self._BULLET_MAPPING.iteritems():
             loader.add_xpath(field_name, self._build_bullet_path(bullet))
+        rooms_and_property_type_xpath = self._build_bullet_path(u'Boligtype:')
+        loader.add_rooms_and_property_type(rooms_and_property_type_xpath)
+        loader.add_value("link", response.url)
         return loader.load_item()
 
     def _build_bullet_path(self, bullet):

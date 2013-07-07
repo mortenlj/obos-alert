@@ -66,18 +66,29 @@ class AsDateTime(BaseAsDateTime):
 
 
 class ObosItem(Item):
-    location = Field()
-    rooms = Field()
-    area = Field(input_processor=AsInt())
+    address = Field()
+    rooms = Field(input_processor=AsInt())
+    size = Field(input_processor=AsInt())
     property_type = Field()
     price = Field(input_processor=AsInt())
     debt = Field(input_processor=AsInt())
     total_price = Field(input_processor=AsInt())
     deadline = Field(input_processor=AsDateTime())
     current_seniority = Field(input_processor=AsDate())
+    link = Field()
 
 
 class ObosLoader(XPathItemLoader):
     default_output_processor = TakeFirst()
     default_item_class = ObosItem
+
+    rooms_and_property_pattern = re.compile(r"(\d+)-roms (\S+)")
+
+    def add_rooms_and_property_type(self, xpath):
+        values = self._get_values(xpath)
+        for value in values:
+            m = self.rooms_and_property_pattern.search(value)
+            if m:
+                self.add_value("rooms", m.group(1))
+                self.add_value("property_type", m.group(2))
 
