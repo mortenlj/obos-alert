@@ -48,6 +48,11 @@ class AsDate(BaseAsDateTime):
         dt = self.get_datetime(it)
         return dt.date()
 
+    def prepare_value(self, v):
+        if u"intern" in v:
+            return u"01.01.1900"
+        return v
+
 
 class AsDateTime(BaseAsDateTime):
     FORMAT = "%d.%m.%Y kl %H.%M"
