@@ -71,6 +71,8 @@ class AsDateTime(BaseAsDateTime):
 
 
 class ObosItem(Item):
+    location_major = Field()
+    location_minor = Field()
     address = Field()
     rooms = Field(input_processor=AsInt())
     size = Field(input_processor=AsInt())
