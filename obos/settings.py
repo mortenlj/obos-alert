@@ -18,4 +18,7 @@ DOWNLOAD_DELAY = 1
 
 ITEM_PIPELINES = [
     "obos.pipelines.MatchingPipeline",
+    "obos.pipelines.MailPipeline"
 ]
+
+MAIL_FROM = "scrapy@ibidem.homeip.net"
