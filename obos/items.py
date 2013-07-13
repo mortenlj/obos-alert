@@ -84,6 +84,15 @@ class ObosItem(Item):
     current_seniority = Field(input_processor=AsDate())
     link = Field()
 
+    def __init__(self, *args, **kwargs):
+        super(ObosItem, self).__init__(*args, **kwargs)
+        self._emails = set()
+
+    def add_email(self, email):
+        self._emails.add(email)
+
+    def get_emails(self):
+        return self._emails
 
 class ObosLoader(XPathItemLoader):
     default_output_processor = TakeFirst()

@@ -15,3 +15,7 @@ NEWSPIDER_MODULE = 'obos.spiders'
 USER_AGENT = 'Obos Alert (+https://bitbucket.org/mortenlj/obos-alert)'
 
 DOWNLOAD_DELAY = 1
+
+ITEM_PIPELINES = [
+    "obos.pipelines.MatchingPipeline",
+]
